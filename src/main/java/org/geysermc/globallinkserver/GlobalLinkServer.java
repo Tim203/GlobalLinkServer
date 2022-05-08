@@ -28,13 +28,13 @@ package org.geysermc.globallinkserver;
 import org.geysermc.globallinkserver.bedrock.BedrockServer;
 import org.geysermc.globallinkserver.config.Config;
 import org.geysermc.globallinkserver.config.ConfigReader;
-import org.geysermc.globallinkserver.player.PlayerManager;
 
 public class GlobalLinkServer {
-    public static void main(String... args) {
+    public static void main(String... args) throws InterruptedException {
         Config config = ConfigReader.readConfig();
+        new BedrockServer(null, null).startServer(config);
 
-        PlayerManager playerManager = new PlayerManager();
-        new BedrockServer(playerManager, null).startServer(config);
+        // we have to keep the program alive
+        Thread.sleep(Long.MAX_VALUE);
     }
 }

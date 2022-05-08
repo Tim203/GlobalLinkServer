@@ -58,7 +58,7 @@ public class BedrockServer implements Server {
 
         BedrockPong pong = new BedrockPong();
         pong.setEdition("MCPE");
-        pong.setMotd("Global Linking");
+        pong.setMotd("Geyser Skin Debug");
         pong.setSubMotd("Server");
         pong.setPlayerCount(0);
         pong.setMaximumPlayerCount(1);
