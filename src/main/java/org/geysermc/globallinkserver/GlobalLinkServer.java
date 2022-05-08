@@ -28,31 +28,13 @@ package org.geysermc.globallinkserver;
 import org.geysermc.globallinkserver.bedrock.BedrockServer;
 import org.geysermc.globallinkserver.config.Config;
 import org.geysermc.globallinkserver.config.ConfigReader;
-import org.geysermc.globallinkserver.java.JavaServer;
-import org.geysermc.globallinkserver.link.LinkManager;
 import org.geysermc.globallinkserver.player.PlayerManager;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class GlobalLinkServer {
-    private static final Timer TIMER = new Timer();
-
     public static void main(String... args) {
         Config config = ConfigReader.readConfig();
 
         PlayerManager playerManager = new PlayerManager();
-        LinkManager linkManager = new LinkManager(config);
-
-        new JavaServer(playerManager, linkManager).startServer(config);
-        new BedrockServer(playerManager, linkManager).startServer(config);
-
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                linkManager.cleanupTempLinks(playerManager);
-            }
-        };
-        TIMER.scheduleAtFixedRate(task, 0L, 60_000L);
+        new BedrockServer(playerManager, null).startServer(config);
     }
 }

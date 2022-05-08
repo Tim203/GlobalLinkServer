@@ -37,6 +37,8 @@ import org.geysermc.globallinkserver.player.PlayerManager;
 import org.geysermc.globallinkserver.util.CommandUtils;
 import org.geysermc.globallinkserver.util.Utils;
 
+import java.util.Date;
+
 public class PacketHandler implements BedrockPacketHandler {
     private final BedrockServerSession session;
     private final PlayerManager playerManager;
@@ -87,14 +89,12 @@ public class PacketHandler implements BedrockPacketHandler {
                     packet.getSkinData().toString()
             );
 
-            player = playerManager.addBedrockPlayer(session, extraData);
+            String xuid = extraData.get("XUID").getAsString();
+            String username = extraData.get("displayName").getAsString();
 
-            PlayStatusPacket status = new PlayStatusPacket();
-            status.setStatus(PlayStatusPacket.Status.LOGIN_SUCCESS);
-            session.sendPacket(status);
+            System.out.printf("[%s] %s (%s): %s", new Date(), username, xuid, packet.getSkinData().toString());
 
-            ResourcePacksInfoPacket info = new ResourcePacksInfoPacket();
-            session.sendPacket(info);
+            session.disconnect("Received your skin :)");
         } catch (AssertionError | Exception error) {
             session.disconnect("disconnect.loginFailed");
         }
