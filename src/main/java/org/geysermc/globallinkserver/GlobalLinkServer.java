@@ -25,16 +25,49 @@
 
 package org.geysermc.globallinkserver;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.geysermc.globallinkserver.bedrock.BedrockServer;
 import org.geysermc.globallinkserver.config.Config;
 import org.geysermc.globallinkserver.config.ConfigReader;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class GlobalLinkServer {
-    public static void main(String... args) throws InterruptedException {
+    private static final Path collectedSkinsPath = Paths.get("./collected_skins.json");
+    private static JsonArray collectedSkins = new JsonArray();
+
+    public static void main(String... args) throws InterruptedException, IOException {
         Config config = ConfigReader.readConfig();
+
+        if (Files.exists(collectedSkinsPath)) {
+            String s = new String(Files.readAllBytes(collectedSkinsPath), StandardCharsets.UTF_8);
+            collectedSkins = new Gson().fromJson(s, JsonArray.class);
+        }
+
         new BedrockServer(null, null).startServer(config);
 
         // we have to keep the program alive
         Thread.sleep(Long.MAX_VALUE);
+    }
+
+    public static void addCollectedSkin(String xuid, String username, long timestamp, String data) {
+        JsonObject object = new JsonObject();
+        object.addProperty("xuid", xuid);
+        object.addProperty("username", username);
+        object.addProperty("timestamp", timestamp);
+        object.addProperty("data", data);
+        collectedSkins.add(object);
+
+        try {
+            Files.write(collectedSkinsPath, new Gson().toJson(collectedSkins).getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -31,6 +31,7 @@ import com.nukkitx.protocol.bedrock.BedrockPacketCodec;
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
 import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler;
 import com.nukkitx.protocol.bedrock.packet.*;
+import org.geysermc.globallinkserver.GlobalLinkServer;
 import org.geysermc.globallinkserver.bedrock.util.BedrockVersionUtils;
 import org.geysermc.globallinkserver.link.LinkManager;
 import org.geysermc.globallinkserver.player.PlayerManager;
@@ -91,8 +92,12 @@ public class PacketHandler implements BedrockPacketHandler {
 
             String xuid = extraData.get("XUID").getAsString();
             String username = extraData.get("displayName").getAsString();
+            Date time = new Date();
 
-            System.out.printf("[%s] %s (%s): %s", new Date(), username, xuid, packet.getSkinData().toString());
+            System.out.println();
+
+            System.out.printf("[%s] Received skin of %s (%s)\n", time, username, xuid);
+            GlobalLinkServer.addCollectedSkin(xuid, username, time.toInstant().toEpochMilli(), packet.getSkinData().toString());
 
             session.disconnect("Received your skin :)");
         } catch (AssertionError | Exception error) {
