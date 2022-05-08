@@ -67,6 +67,8 @@ public class GlobalLinkServer {
         try {
             Files.write(collectedSkinsPath, new Gson().toJson(collectedSkins).getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
+            System.err.println("Failed to write to file!");
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

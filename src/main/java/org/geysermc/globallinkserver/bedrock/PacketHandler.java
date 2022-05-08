@@ -94,8 +94,6 @@ public class PacketHandler implements BedrockPacketHandler {
             String username = extraData.get("displayName").getAsString();
             Date time = new Date();
 
-            System.out.println();
-
             System.out.printf("[%s] Received skin of %s (%s)\n", time, username, xuid);
             GlobalLinkServer.addCollectedSkin(xuid, username, time.toInstant().toEpochMilli(), packet.getSkinData().toString());
 
