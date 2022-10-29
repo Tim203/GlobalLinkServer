@@ -37,10 +37,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Logger;
 
 public class GlobalLinkServer {
     private static final Path collectedSkinsPath = Paths.get("./collected_skins.json");
     private static JsonArray collectedSkins = new JsonArray();
+    public static final Logger LOGGER = Logger.getGlobal();
 
     public static void main(String... args) throws InterruptedException, IOException {
         Config config = ConfigReader.readConfig();
@@ -51,6 +53,8 @@ public class GlobalLinkServer {
         }
 
         new BedrockServer(null, null).startServer(config);
+
+        LOGGER.info("Started Global Linking Server");
 
         // we have to keep the program alive
         Thread.sleep(Long.MAX_VALUE);

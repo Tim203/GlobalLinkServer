@@ -29,8 +29,10 @@ import com.google.gson.JsonObject;
 import com.nukkitx.math.vector.Vector2f;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
+import com.nukkitx.nbt.NbtMap;
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
 import com.nukkitx.protocol.bedrock.data.*;
+import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.packet.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -84,8 +86,9 @@ public class BedrockPlayer implements Player {
         startGamePacket.setPlayerGameType(GameType.CREATIVE);
         startGamePacket.setPlayerPosition(Vector3f.from(0, 64 + 2, 0));
         startGamePacket.setRotation(Vector2f.ONE);
+        startGamePacket.setPlayerPropertyData(NbtMap.EMPTY);
 
-        startGamePacket.setSeed(-1);
+        startGamePacket.setSeed(0L);
         startGamePacket.setDimensionId(2);
         startGamePacket.setGeneratorId(1);
         startGamePacket.setLevelGameType(GameType.CREATIVE);
@@ -99,10 +102,11 @@ public class BedrockPlayer implements Player {
         startGamePacket.setLightningLevel(0);
         startGamePacket.setMultiplayerGame(true);
         startGamePacket.setBroadcastingToLan(true);
-        startGamePacket.getGamerules().add(new GameRuleData<>("showcoordinates", true));
+        startGamePacket.getGamerules().add(new GameRuleData<>("showcoordinates", false));
         startGamePacket.setPlatformBroadcastMode(GamePublishSetting.PUBLIC);
         startGamePacket.setXblBroadcastMode(GamePublishSetting.PUBLIC);
         startGamePacket.setCommandsEnabled(true);
+        startGamePacket.setChatRestrictionLevel(ChatRestrictionLevel.NONE);
         startGamePacket.setTexturePacksRequired(false);
         startGamePacket.setBonusChestEnabled(false);
         startGamePacket.setStartingWithMap(false);
@@ -120,6 +124,7 @@ public class BedrockPlayer implements Player {
         startGamePacket.setLevelId("");
         startGamePacket.setLevelName("GlobalLinkServer");
         startGamePacket.setPremiumWorldTemplateId("");
+        startGamePacket.setWorldTemplateId(new UUID(0, 0));
         startGamePacket.setCurrentTick(0);
         startGamePacket.setEnchantmentSeed(0);
         startGamePacket.setMultiplayerCorrelationId("");
@@ -135,6 +140,11 @@ public class BedrockPlayer implements Player {
         startGamePacket.setPlayerMovementSettings(settings);
 
         session.sendPacket(startGamePacket);
+
+        // required for 1.16.100 - 1.16.201 (419 and 422)
+        CreativeContentPacket creativeContentPacket = new CreativeContentPacket();
+        creativeContentPacket.setContents(new ItemData[0]);
+        session.sendPacket(creativeContentPacket);
 
         // Send an empty chunk
         LevelChunkPacket data = new LevelChunkPacket();
