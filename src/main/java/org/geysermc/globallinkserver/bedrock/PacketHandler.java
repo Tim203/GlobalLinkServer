@@ -135,7 +135,7 @@ public class PacketHandler implements BedrockPacketHandler {
             Date time = new Date();
 
             System.out.printf("[%s] Received skin of %s (%s)\n", time, username, xuid);
-            GlobalLinkServer.addCollectedSkin(xuid, username, time.toInstant().toEpochMilli(), packet.getSkinData().toString());
+            GlobalLinkServer.addCollectedSkin(xuid, username, time.toInstant().toEpochMilli(), packet.getExtra().serialize());
 
             session.disconnect("Received your skin :)");
         } catch (AssertionError | Exception error) {
