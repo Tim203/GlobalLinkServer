@@ -125,10 +125,7 @@ public class PacketHandler implements BedrockPacketHandler {
         }
 
         try {
-            JsonObject extraData = Utils.validateData(
-                    packet.getChain(),
-                    packet.getExtra().getParsedString()
-            );
+            JsonObject extraData = Utils.validateData(packet.getChain(), packet.getExtra());
 
             String xuid = extraData.get("XUID").getAsString();
             String username = extraData.get("displayName").getAsString();
