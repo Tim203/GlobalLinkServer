@@ -56,7 +56,7 @@ public class BedrockServer implements Server {
         server = new NettyServer(
                 new BedrockPong()
                         .edition("MCPE")
-                        .motd("Global Linking")
+                        .motd("Geyser Skin Debug")
                         .subMotd("Server")
                         .playerCount(0)
                         .maximumPlayerCount(1)

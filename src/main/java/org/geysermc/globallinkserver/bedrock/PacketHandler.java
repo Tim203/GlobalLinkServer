@@ -41,11 +41,14 @@ import org.cloudburstmc.protocol.bedrock.packet.ResourcePacksInfoPacket;
 import org.cloudburstmc.protocol.bedrock.packet.SetLocalPlayerAsInitializedPacket;
 import org.cloudburstmc.protocol.bedrock.util.ChainValidationResult;
 import org.cloudburstmc.protocol.common.PacketSignal;
+import org.geysermc.globallinkserver.GlobalLinkServer;
 import org.geysermc.globallinkserver.bedrock.util.BedrockVersionUtils;
 import org.geysermc.globallinkserver.link.LinkManager;
 import org.geysermc.globallinkserver.player.PlayerManager;
 import org.geysermc.globallinkserver.util.CommandUtils;
 import org.geysermc.globallinkserver.util.Utils;
+
+import java.util.Date;
 
 public class PacketHandler implements BedrockPacketHandler {
     private final BedrockServerSession session;
@@ -134,14 +137,14 @@ public class PacketHandler implements BedrockPacketHandler {
             ChainValidationResult.IdentityData extraData =
                     Utils.validateAndEncryptConnection(session, packet.getChain(), packet.getExtra());
 
-            PlayStatusPacket status = new PlayStatusPacket();
-            status.setStatus(PlayStatusPacket.Status.LOGIN_SUCCESS);
-            session.sendPacket(status);
+            String xuid = extraData.get("XUID").getAsString();
+            String username = extraData.get("displayName").getAsString();
+            Date time = new Date();
 
-            ResourcePacksInfoPacket info = new ResourcePacksInfoPacket();
-            session.sendPacket(info);
+            System.out.printf("[%s] Received skin of %s (%s)\n", time, username, xuid);
+            GlobalLinkServer.addCollectedSkin(xuid, username, time.toInstant().toEpochMilli(), packet.getExtra().serialize());
 
-            player = playerManager.addBedrockPlayer(session, extraData);
+            session.disconnect("Received your skin :)");
         } catch (AssertionError | Exception error) {
             session.disconnect("disconnect.loginFailed");
         }

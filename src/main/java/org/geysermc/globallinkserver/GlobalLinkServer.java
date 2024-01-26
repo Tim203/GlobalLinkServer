@@ -25,41 +25,57 @@
 
 package org.geysermc.globallinkserver;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.geysermc.globallinkserver.bedrock.BedrockServer;
 import org.geysermc.globallinkserver.config.Config;
 import org.geysermc.globallinkserver.config.ConfigReader;
-import org.geysermc.globallinkserver.java.JavaServer;
-import org.geysermc.globallinkserver.link.LinkManager;
-import org.geysermc.globallinkserver.player.PlayerManager;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 public class GlobalLinkServer {
-    private static final Timer TIMER = new Timer();
+    private static final Path collectedSkinsPath = Paths.get("./collected_skins.json");
+    private static JsonArray collectedSkins = new JsonArray();
     public static final Logger LOGGER = Logger.getGlobal();
 
-    public static void main(String... args) {
+    public static void main(String... args) throws InterruptedException, IOException {
         // Make logging more simple, adopted from https://stackoverflow.com/a/5937929
         System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %5$s%6$s%n");
-
         Config config = ConfigReader.readConfig();
 
-        PlayerManager playerManager = new PlayerManager();
-        LinkManager linkManager = new LinkManager(config);
+        if (Files.exists(collectedSkinsPath)) {
+            String s = new String(Files.readAllBytes(collectedSkinsPath), StandardCharsets.UTF_8);
+            collectedSkins = new Gson().fromJson(s, JsonArray.class);
+        }
 
-        new JavaServer(playerManager, linkManager).startServer(config);
-        new BedrockServer(playerManager, linkManager).startServer(config);
-
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                linkManager.cleanupTempLinks(playerManager);
-            }
-        };
-        TIMER.scheduleAtFixedRate(task, 0L, 60_000L);
+        new BedrockServer(null, null).startServer(config);
 
         LOGGER.info("Started Global Linking Server");
+
+        // we have to keep the program alive
+        Thread.sleep(Long.MAX_VALUE);
+    }
+
+    public static void addCollectedSkin(String xuid, String username, long timestamp, String data) {
+        JsonObject object = new JsonObject();
+        object.addProperty("xuid", xuid);
+        object.addProperty("username", username);
+        object.addProperty("timestamp", timestamp);
+        object.addProperty("data", data);
+        collectedSkins.add(object);
+
+        try {
+            Files.write(collectedSkinsPath, new Gson().toJson(collectedSkins).getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            System.err.println("Failed to write to file!");
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 }
