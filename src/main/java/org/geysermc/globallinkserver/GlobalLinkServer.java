@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2021 GeyserMC. http://geysermc.org
+ * Copyright (c) 2021-2024 GeyserMC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,36 +8,34 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  *
  * @author GeyserMC
  * @link https://github.com/GeyserMC/GlobalLinkServer
  */
-
 package org.geysermc.globallinkserver;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.geysermc.globallinkserver.bedrock.BedrockServer;
-import org.geysermc.globallinkserver.config.Config;
-import org.geysermc.globallinkserver.config.ConfigReader;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
+import org.geysermc.globallinkserver.bedrock.BedrockServer;
+import org.geysermc.globallinkserver.config.Config;
+import org.geysermc.globallinkserver.config.ConfigReader;
 
 public class GlobalLinkServer {
     private static final Path collectedSkinsPath = Paths.get("./collected_skins.json");
@@ -46,7 +44,8 @@ public class GlobalLinkServer {
 
     public static void main(String... args) throws InterruptedException, IOException {
         // Make logging more simple, adopted from https://stackoverflow.com/a/5937929
-        System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %5$s%6$s%n");
+        System.setProperty(
+                "java.util.logging.SimpleFormatter.format", "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %5$s%6$s%n");
         Config config = ConfigReader.readConfig();
 
         if (Files.exists(collectedSkinsPath)) {

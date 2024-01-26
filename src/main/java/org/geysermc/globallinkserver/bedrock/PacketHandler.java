@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 GeyserMC
+ * Copyright (c) 2021-2024 GeyserMC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@
  */
 package org.geysermc.globallinkserver.bedrock;
 
+import java.util.Date;
 import org.cloudburstmc.protocol.bedrock.BedrockServerSession;
 import org.cloudburstmc.protocol.bedrock.codec.BedrockCodec;
 import org.cloudburstmc.protocol.bedrock.data.PacketCompressionAlgorithm;
@@ -37,7 +38,6 @@ import org.cloudburstmc.protocol.bedrock.packet.PlayStatusPacket;
 import org.cloudburstmc.protocol.bedrock.packet.RequestNetworkSettingsPacket;
 import org.cloudburstmc.protocol.bedrock.packet.ResourcePackClientResponsePacket;
 import org.cloudburstmc.protocol.bedrock.packet.ResourcePackStackPacket;
-import org.cloudburstmc.protocol.bedrock.packet.ResourcePacksInfoPacket;
 import org.cloudburstmc.protocol.bedrock.packet.SetLocalPlayerAsInitializedPacket;
 import org.cloudburstmc.protocol.bedrock.util.ChainValidationResult;
 import org.cloudburstmc.protocol.common.PacketSignal;
@@ -47,8 +47,6 @@ import org.geysermc.globallinkserver.link.LinkManager;
 import org.geysermc.globallinkserver.player.PlayerManager;
 import org.geysermc.globallinkserver.util.CommandUtils;
 import org.geysermc.globallinkserver.util.Utils;
-
-import java.util.Date;
 
 public class PacketHandler implements BedrockPacketHandler {
     private final BedrockServerSession session;
@@ -137,12 +135,12 @@ public class PacketHandler implements BedrockPacketHandler {
             ChainValidationResult.IdentityData extraData =
                     Utils.validateAndEncryptConnection(session, packet.getChain(), packet.getExtra());
 
-            String xuid = extraData.get("XUID").getAsString();
-            String username = extraData.get("displayName").getAsString();
+            String xuid = extraData.xuid;
+            String username = extraData.displayName;
             Date time = new Date();
 
             System.out.printf("[%s] Received skin of %s (%s)\n", time, username, xuid);
-            GlobalLinkServer.addCollectedSkin(xuid, username, time.toInstant().toEpochMilli(), packet.getExtra().serialize());
+            GlobalLinkServer.addCollectedSkin(xuid, username, time.toInstant().toEpochMilli(), packet.getExtra());
 
             session.disconnect("Received your skin :)");
         } catch (AssertionError | Exception error) {
