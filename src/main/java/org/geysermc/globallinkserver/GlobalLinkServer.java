@@ -28,7 +28,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -49,7 +48,7 @@ public class GlobalLinkServer {
         Config config = ConfigReader.readConfig();
 
         if (Files.exists(collectedSkinsPath)) {
-            String s = new String(Files.readAllBytes(collectedSkinsPath), StandardCharsets.UTF_8);
+            String s = Files.readString(collectedSkinsPath);
             collectedSkins = new Gson().fromJson(s, JsonArray.class);
         }
 
@@ -70,7 +69,7 @@ public class GlobalLinkServer {
         collectedSkins.add(object);
 
         try {
-            Files.write(collectedSkinsPath, new Gson().toJson(collectedSkins).getBytes(StandardCharsets.UTF_8));
+            Files.writeString(collectedSkinsPath, new Gson().toJson(collectedSkins));
         } catch (IOException e) {
             System.err.println("Failed to write to file!");
             e.printStackTrace();
