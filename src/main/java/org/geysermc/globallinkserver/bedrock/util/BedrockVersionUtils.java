@@ -33,6 +33,7 @@ import org.cloudburstmc.protocol.bedrock.codec.v618.Bedrock_v618;
 import org.cloudburstmc.protocol.bedrock.codec.v622.Bedrock_v622;
 import org.cloudburstmc.protocol.bedrock.codec.v630.Bedrock_v630;
 import org.cloudburstmc.protocol.bedrock.codec.v649.Bedrock_v649;
+import org.cloudburstmc.protocol.bedrock.codec.v898.Bedrock_v898;
 
 /**
  * Contains information about the supported Bedrock protocols in GlobalLinkServer.
@@ -43,7 +44,7 @@ public class BedrockVersionUtils {
      * Default Bedrock codec that should act as a fallback. Should represent the latest available
      * release of the game that GlobalLinkServer supports.
      */
-    public static final BedrockCodec LATEST_CODEC = Bedrock_v649.CODEC;
+    public static final BedrockCodec LATEST_CODEC = Bedrock_v898.CODEC;
 
     /**
      * A list of all supported Bedrock versions that can join GlobalLinkServer
@@ -51,11 +52,6 @@ public class BedrockVersionUtils {
     public static final List<BedrockCodec> SUPPORTED_BEDROCK_CODECS = new ArrayList<>();
 
     static {
-        SUPPORTED_BEDROCK_CODECS.add(Bedrock_v589.CODEC);
-        SUPPORTED_BEDROCK_CODECS.add(Bedrock_v594.CODEC);
-        SUPPORTED_BEDROCK_CODECS.add(Bedrock_v618.CODEC);
-        SUPPORTED_BEDROCK_CODECS.add(Bedrock_v622.CODEC);
-        SUPPORTED_BEDROCK_CODECS.add(Bedrock_v630.CODEC);
         SUPPORTED_BEDROCK_CODECS.add(LATEST_CODEC);
     }
 

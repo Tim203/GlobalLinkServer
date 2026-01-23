@@ -26,6 +26,7 @@
 package org.geysermc.globallinkserver.util;
 
 import org.cloudburstmc.protocol.bedrock.BedrockServerSession;
+import org.cloudburstmc.protocol.bedrock.data.auth.AuthPayload;
 import org.cloudburstmc.protocol.bedrock.packet.ServerToClientHandshakePacket;
 import org.cloudburstmc.protocol.bedrock.util.ChainValidationResult;
 import org.cloudburstmc.protocol.bedrock.util.EncryptionUtils;
@@ -53,8 +54,8 @@ public class Utils {
         }
     }
 
-    public static ChainValidationResult.IdentityData validateAndEncryptConnection(BedrockServerSession session, List<String> certChainData, String clientDataJwt) throws Exception {
-        ChainValidationResult result = EncryptionUtils.validateChain(certChainData);
+    public static ChainValidationResult.IdentityData validateAndEncryptConnection(BedrockServerSession session, AuthPayload payload, String clientDataJwt) throws Exception {
+        ChainValidationResult result = EncryptionUtils.validatePayload(payload);
         if (!result.signed()) {
             throw new IllegalArgumentException("Chain is not signed");
         }

@@ -68,7 +68,7 @@ public class PacketHandler implements BedrockPacketHandler {
     }
 
     @Override
-    public void onDisconnect(String reason) {
+    public void onDisconnect(CharSequence reason) {
         if (player != null) {
             playerManager.removeBedrockPlayer(player);
         }
@@ -133,14 +133,14 @@ public class PacketHandler implements BedrockPacketHandler {
 
         try {
             ChainValidationResult.IdentityData extraData =
-                    Utils.validateAndEncryptConnection(session, packet.getChain(), packet.getExtra());
+                Utils.validateAndEncryptConnection(session, packet.getAuthPayload(), packet.getClientJwt());
 
             String xuid = extraData.xuid;
             String username = extraData.displayName;
             Date time = new Date();
 
             System.out.printf("[%s] Received skin of %s (%s)\n", time, username, xuid);
-            GlobalLinkServer.addCollectedSkin(xuid, username, time.toInstant().toEpochMilli(), packet.getExtra());
+            GlobalLinkServer.addCollectedSkin(xuid, username, time.toInstant().toEpochMilli(), packet.getClientJwt());
 
             session.disconnect("Received your skin :)");
         } catch (AssertionError | Exception error) {

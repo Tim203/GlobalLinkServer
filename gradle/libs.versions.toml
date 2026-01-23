@@ -1,11 +1,12 @@
 [versions]
 gson = "2.10.1"
-protocol = "3.0.0.Beta1-20240204.134050-120"
-protocol-connection = "3.0.0.Beta1-20240204.134050-119"
+protocol = "3.0.0.Beta11-20251212.150341-16"
+protocol-connection = "3.0.0.Beta11-20260105.115034-18"
+protocol-common = "3.0.0.Beta11-20251212.150341-15"
 netty = "4.1.80.Final"
 fastutil = "8.5.2"
 mcprotocollib = "1.20.4-1"
-adventure-text = "4.15.0-20231207.074016-23" # Match version to MCPL
+adventure-text = "4.15.0" # Match version to MCPL
 mariadb-client = "2.7.3"
 checker-qual = "3.21.1"
 indra = "3.1.2"
@@ -14,7 +15,7 @@ indra = "3.1.2"
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 protocol-codec = { module = "org.cloudburstmc.protocol:bedrock-codec", version.ref = "protocol" }
 protocol-connection = { module = "org.cloudburstmc.protocol:bedrock-connection", version.ref = "protocol-connection" }
-protocol-common = { module = "org.cloudburstmc.protocol:common", version.ref = "protocol-connection" }
+protocol-common = { module = "org.cloudburstmc.protocol:common", version.ref = "protocol-common" }
 
 netty-handler = { group = "io.netty", name = "netty-handler", version.ref = "netty" }
 
